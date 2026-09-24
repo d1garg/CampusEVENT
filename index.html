@@ -1,0 +1,1781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CampusSync</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+
+        /* =========================
+           DARK THEME
+        ========================= */
+
+        :root {
+
+            --bg: #0d0b18;
+            --bg-secondary: #151126;
+
+            --card: rgba(25,21,43,0.88);
+            --card-hover: #241d3d;
+
+            --text: #eeeaff;
+            --muted: #918ba8;
+
+            --border: rgba(167,139,250,0.15);
+
+            --lavender: #a78bfa;
+            --lavender-light: #c4b5fd;
+
+            --log-bg: #090711;
+
+            --shadow: rgba(0,0,0,0.25);
+        }
+
+
+        /* =========================
+           LIGHT THEME
+        ========================= */
+
+        body.light {
+
+            --bg: #f5f2ff;
+            --bg-secondary: #ebe5ff;
+
+            --card: rgba(255,255,255,0.90);
+            --card-hover: #f1ecff;
+
+            --text: #29233d;
+            --muted: #756d89;
+
+            --border: rgba(124,92,246,0.16);
+
+            --lavender: #7957d9;
+            --lavender-light: #8065d9;
+
+            --log-bg: #eeeaff;
+
+            --shadow: rgba(91,67,145,0.12);
+        }
+
+
+        /* =========================
+           BODY
+        ========================= */
+
+        body {
+
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at top left,
+                    rgba(124,92,246,0.18),
+                    transparent 35%
+                ),
+
+                radial-gradient(
+                    circle at bottom right,
+                    rgba(167,139,250,0.12),
+                    transparent 35%
+                ),
+
+                var(--bg);
+
+            color: var(--text);
+
+            padding: 30px;
+
+            transition:
+                background 0.4s,
+                color 0.4s;
+        }
+
+
+        .container {
+
+            max-width: 1250px;
+
+            margin: auto;
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 30px;
+        }
+
+
+        .brand {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 15px;
+        }
+
+
+        .logo {
+
+            width: 52px;
+            height: 52px;
+
+            border-radius: 15px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #a78bfa,
+                    #7c5cff
+                );
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 25px;
+
+            color: white;
+
+            box-shadow:
+                0 0 30px
+                rgba(124,92,246,0.25);
+        }
+
+
+        h1 {
+
+            font-size: 30px;
+
+            letter-spacing: -0.5px;
+        }
+
+
+        .subtitle {
+
+            color: var(--muted);
+
+            margin-top: 4px;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           RIGHT HEADER
+        ========================= */
+
+        .header-right {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+        }
+
+
+        .badge {
+
+            padding: 8px 14px;
+
+            border-radius: 30px;
+
+            background:
+                rgba(167,139,250,0.10);
+
+            border:
+                1px solid var(--border);
+
+            color:
+                var(--lavender-light);
+
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           THEME BUTTON
+        ========================= */
+
+        .theme-btn {
+
+            border: 1px solid var(--border);
+
+            background: var(--card);
+
+            color: var(--text);
+
+            width: 42px;
+            height: 42px;
+
+            border-radius: 12px;
+
+            cursor: pointer;
+
+            font-size: 18px;
+
+            transition: 0.25s;
+        }
+
+
+        .theme-btn:hover {
+
+            transform: translateY(-2px);
+
+            border-color:
+                var(--lavender);
+
+            box-shadow:
+                0 5px 20px
+                rgba(124,92,246,0.15);
+        }
+
+
+        /* =========================
+           STATUS
+        ========================= */
+
+        .status-box {
+
+            background: var(--card);
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 22px;
+
+            padding: 25px;
+
+            margin-bottom: 22px;
+
+            box-shadow:
+                0 15px 45px
+                var(--shadow);
+
+            transition:
+                background 0.4s,
+                border 0.4s;
+        }
+
+
+        .status {
+
+            font-size: 20px;
+
+            font-weight: 600;
+        }
+
+
+        .status.live {
+            color: #31a86d;
+        }
+
+
+        .status.down {
+            color: #e65c6b;
+        }
+
+
+        .status.recovery {
+            color: var(--lavender);
+        }
+
+
+        #description {
+
+            color: var(--muted);
+
+            margin-top: 7px;
+
+            font-size: 14px;
+        }
+
+
+        .progress {
+
+            width: 100%;
+
+            height: 6px;
+
+            background:
+                rgba(124,92,246,0.12);
+
+            border-radius: 20px;
+
+            overflow: hidden;
+
+            margin-top: 20px;
+        }
+
+
+        .progress-bar {
+
+            width: 0%;
+
+            height: 100%;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #8b5cf6,
+                    #c4b5fd
+                );
+
+            box-shadow:
+                0 0 15px
+                rgba(139,92,246,0.5);
+
+            transition:
+                width 0.5s;
+        }
+
+
+        .timer {
+
+            color:
+                var(--lavender);
+
+            margin-top: 12px;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================
+           STAT CARDS
+        ========================= */
+
+        .stats {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 15px;
+
+            margin-bottom: 22px;
+        }
+
+
+        .stat-card {
+
+            background:
+                var(--card);
+
+            border:
+                1px solid var(--border);
+
+            padding: 20px;
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 8px 25px
+                var(--shadow);
+
+            transition:
+                0.3s;
+        }
+
+
+        .stat-card:hover {
+
+            transform:
+                translateY(-3px);
+
+            border-color:
+                rgba(124,92,246,0.35);
+        }
+
+
+        .stat-title {
+
+            color:
+                var(--muted);
+
+            font-size: 13px;
+        }
+
+
+        .stat-value {
+
+            font-size: 25px;
+
+            font-weight: 600;
+
+            margin-top: 8px;
+
+            color:
+                var(--lavender-light);
+        }
+
+
+        /* =========================
+           MAIN GRID
+        ========================= */
+
+        .main-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1.4fr 1fr;
+
+            gap: 22px;
+        }
+
+
+        /* =========================
+           SECTION
+        ========================= */
+
+        .section {
+
+            background:
+                var(--card);
+
+            border:
+                1px solid var(--border);
+
+            padding: 23px;
+
+            border-radius: 22px;
+
+            box-shadow:
+                0 15px 45px
+                var(--shadow);
+
+            transition:
+                background 0.4s;
+        }
+
+
+        .section h2 {
+
+            font-size: 18px;
+
+            margin-bottom: 18px;
+        }
+
+
+        /* =========================
+           INFORMATION CARDS
+        ========================= */
+
+        .card {
+
+            background:
+                var(--card-hover);
+
+            border:
+                1px solid var(--border);
+
+            padding: 17px;
+
+            border-radius: 15px;
+
+            margin-bottom: 11px;
+
+            transition:
+                0.25s;
+        }
+
+
+        .card:hover {
+
+            transform:
+                translateY(-2px);
+
+            border-color:
+                rgba(167,139,250,0.35);
+
+            box-shadow:
+                0 8px 25px
+                rgba(124,92,246,0.08);
+        }
+
+
+        .card-header {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items: center;
+
+            gap: 10px;
+        }
+
+
+        .card h3 {
+
+            font-size: 15px;
+
+            color:
+                var(--text);
+        }
+
+
+        .card p {
+
+            color:
+                var(--muted);
+
+            margin-top: 7px;
+
+            font-size: 13px;
+        }
+
+
+        .date {
+
+            color:
+                var(--lavender-light);
+
+            font-size: 12px;
+
+            white-space: nowrap;
+        }
+
+
+        .tag {
+
+            display: inline-block;
+
+            margin-top: 10px;
+
+            padding: 4px 9px;
+
+            border-radius: 20px;
+
+            background:
+                rgba(167,139,250,0.10);
+
+            color:
+                var(--lavender-light);
+
+            font-size: 11px;
+        }
+
+
+        /* =========================
+           LOG
+        ========================= */
+
+        .log {
+
+            background:
+                var(--log-bg);
+
+            padding: 16px;
+
+            border-radius: 14px;
+
+            height: 350px;
+
+            overflow-y: auto;
+
+            font-family:
+                Consolas, monospace;
+
+            font-size: 12px;
+
+            border:
+                1px solid var(--border);
+
+            transition:
+                background 0.4s;
+        }
+
+
+        .log-line {
+
+            margin-bottom: 9px;
+
+            line-height: 1.5;
+        }
+
+
+        .success {
+            color: #35a873;
+        }
+
+
+        .error {
+            color: #e65c6b;
+        }
+
+
+        .warning {
+            color: #9b78d8;
+        }
+
+
+        .info {
+            color: var(--muted);
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+
+            text-align: center;
+
+            color:
+                var(--muted);
+
+            opacity: 0.65;
+
+            font-size: 12px;
+
+            margin-top: 25px;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media(max-width: 850px) {
+
+            .stats {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+
+            .main-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        @media(max-width: 550px) {
+
+            body {
+
+                padding: 18px;
+            }
+
+
+            .stats {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            header {
+
+                align-items:
+                    flex-start;
+
+                gap: 15px;
+            }
+
+
+            .badge {
+
+                display: none;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- =====================
+         HEADER
+    ====================== -->
+
+    <header>
+
+        <div class="brand">
+
+            <div class="logo">
+                ✦
+            </div>
+
+            <div>
+
+                <h1>
+                    CampusSync
+                </h1>
+
+                <div class="subtitle">
+                    Fault-Tolerant Campus Information System
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-right">
+
+            <div class="badge">
+                ● SYSTEM MONITOR
+            </div>
+
+            <button
+                class="theme-btn"
+                id="themeBtn"
+                onclick="toggleTheme()"
+                title="Change theme"
+            >
+                ☀️
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================
+         STATUS
+    ====================== -->
+
+    <div class="status-box">
+
+        <div id="status"
+             class="status recovery">
+
+            Initializing System...
+
+        </div>
+
+
+        <div id="description">
+
+            Connecting to Campus API
+
+        </div>
+
+
+        <div class="progress">
+
+            <div
+                id="progressBar"
+                class="progress-bar">
+            </div>
+
+        </div>
+
+
+        <div
+            id="timer"
+            class="timer">
+        </div>
+
+    </div>
+
+
+    <!-- =====================
+         STATISTICS
+    ====================== -->
+
+    <div class="stats">
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                Campus Notices
+            </div>
+
+            <div
+                class="stat-value"
+                id="noticeCount">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                Upcoming Events
+            </div>
+
+            <div
+                class="stat-value"
+                id="eventCount">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                API Retries
+            </div>
+
+            <div
+                class="stat-value"
+                id="retryCount">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-title">
+                System Mode
+            </div>
+
+            <div
+                class="stat-value"
+                id="systemMode">
+                -
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================
+         MAIN
+    ====================== -->
+
+    <div class="main-grid">
+
+
+        <div>
+
+
+            <!-- NOTICES -->
+
+            <div class="section">
+
+                <h2>
+                    📢 Campus Notices
+                </h2>
+
+                <div id="notices"></div>
+
+            </div>
+
+
+            <br>
+
+
+            <!-- EVENTS -->
+
+            <div class="section">
+
+                <h2>
+                    🎯 Upcoming Events
+                </h2>
+
+                <div id="events"></div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ACTIVITY -->
+
+        <div>
+
+            <div class="section">
+
+                <h2>
+                    Live Activity
+                </h2>
+
+                <div
+                    id="log"
+                    class="log">
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <footer>
+
+        CampusSync • Reliable campus information
+        through fault-tolerant APIs
+
+    </footer>
+
+
+</div>
+
+
+<script>
+
+
+    /* =========================
+       THEME SYSTEM
+    ========================= */
+
+    function toggleTheme() {
+
+        document.body.classList.toggle(
+            "light"
+        );
+
+
+        const isLight =
+            document.body.classList.contains(
+                "light"
+            );
+
+
+        const button =
+            document.getElementById(
+                "themeBtn"
+            );
+
+
+        if (isLight) {
+
+            button.innerText = "🌙";
+
+            localStorage.setItem(
+                "campusTheme",
+                "light"
+            );
+
+        }
+
+        else {
+
+            button.innerText = "☀️";
+
+            localStorage.setItem(
+                "campusTheme",
+                "dark"
+            );
+
+        }
+
+    }
+
+
+    /*
+        Remember user's theme
+    */
+
+    const savedTheme =
+        localStorage.getItem(
+            "campusTheme"
+        );
+
+
+    if (savedTheme === "light") {
+
+        document.body.classList.add(
+            "light"
+        );
+
+        document.getElementById(
+            "themeBtn"
+        ).innerText = "🌙";
+
+    }
+
+
+    /* =========================
+       CONFIGURATION
+    ========================= */
+
+    const MAX_RETRIES = 3;
+
+    const RECOVERY_INTERVAL = 10;
+
+
+    /* =========================
+       CACHE DATA
+    ========================= */
+
+    const cachedNotices = [
+
+        {
+            id: 1,
+            title: "Mid Semester Examination Schedule Released",
+            date: "05 Oct 2026",
+            category: "Examination"
+        },
+
+        {
+            id: 2,
+            title: "College will remain closed on Gandhi Jayanti",
+            date: "02 Oct 2026",
+            category: "Holiday"
+        },
+
+        {
+            id: 3,
+            title: "Registration open for Technical Workshop",
+            date: "28 Sep 2026",
+            category: "Workshop"
+        },
+
+        {
+            id: 4,
+            title: "Internal Assessment Submission Deadline",
+            date: "30 Sep 2026",
+            category: "Academic"
+        },
+
+        {
+            id: 5,
+            title: "Library Timings Extended During Examinations",
+            date: "01 Oct 2026",
+            category: "Library"
+        },
+
+        {
+            id: 6,
+            title: "Student Council Meeting Scheduled",
+            date: "03 Oct 2026",
+            category: "Campus"
+        }
+
+    ];
+
+
+    const cachedEvents = [
+
+        {
+            id: 1,
+            name: "Tech Fest 2026",
+            date: "15 Oct 2026",
+            category: "Technology"
+        },
+
+        {
+            id: 2,
+            name: "Inter College Coding Competition",
+            date: "20 Oct 2026",
+            category: "Competition"
+        },
+
+        {
+            id: 3,
+            name: "AI & Machine Learning Workshop",
+            date: "08 Oct 2026",
+            category: "Workshop"
+        },
+
+        {
+            id: 4,
+            name: "Freshers Interaction Session",
+            date: "12 Oct 2026",
+            category: "Student Life"
+        },
+
+        {
+            id: 5,
+            name: "Hackathon Orientation",
+            date: "18 Oct 2026",
+            category: "Hackathon"
+        },
+
+        {
+            id: 6,
+            name: "Annual Sports Meet",
+            date: "25 Oct 2026",
+            category: "Sports"
+        }
+
+    ];
+
+
+    /* =========================
+       LOG
+    ========================= */
+
+    function log(message, type = "info") {
+
+        const logBox =
+            document.getElementById(
+                "log"
+            );
+
+        const line =
+            document.createElement(
+                "div"
+            );
+
+        line.className =
+            "log-line " + type;
+
+        const time =
+            new Date()
+            .toLocaleTimeString();
+
+        line.innerHTML =
+            `[${time}] ${message}`;
+
+        logBox.appendChild(line);
+
+        logBox.scrollTop =
+            logBox.scrollHeight;
+
+    }
+
+
+    /* =========================
+       STATUS
+    ========================= */
+
+    function setStatus(
+        text,
+        type,
+        description
+    ) {
+
+        const status =
+            document.getElementById(
+                "status"
+            );
+
+        status.className =
+            "status " + type;
+
+        status.innerText =
+            text;
+
+        document.getElementById(
+            "description"
+        ).innerText =
+            description;
+
+    }
+
+
+    /* =========================
+       PROGRESS
+    ========================= */
+
+    function setProgress(value) {
+
+        document.getElementById(
+            "progressBar"
+        ).style.width =
+            value + "%";
+
+    }
+
+
+    /* =========================
+       SHOW NOTICES
+    ========================= */
+
+    function showNotices(
+        data,
+        cached = false
+    ) {
+
+        const container =
+            document.getElementById(
+                "notices"
+            );
+
+        container.innerHTML = "";
+
+
+        document.getElementById(
+            "noticeCount"
+        ).innerText =
+            data.length;
+
+
+        data.forEach(
+            notice => {
+
+                container.innerHTML += `
+
+                    <div class="card">
+
+                        <div class="card-header">
+
+                            <h3>
+                                ${notice.title}
+                            </h3>
+
+                            <span class="date">
+                                ${notice.date}
+                            </span>
+
+                        </div>
+
+                        <span class="tag">
+                            ${notice.category}
+                        </span>
+
+                        ${
+                            cached
+
+                            ?
+
+                            "<p>📦 Cached information</p>"
+
+                            :
+
+                            "<p>● Live information from Campus API</p>"
+                        }
+
+                    </div>
+
+                `;
+
+            }
+        );
+
+    }
+
+
+    /* =========================
+       SHOW EVENTS
+    ========================= */
+
+    function showEvents(
+        data,
+        cached = false
+    ) {
+
+        const container =
+            document.getElementById(
+                "events"
+            );
+
+        container.innerHTML = "";
+
+
+        document.getElementById(
+            "eventCount"
+        ).innerText =
+            data.length;
+
+
+        data.forEach(
+            event => {
+
+                container.innerHTML += `
+
+                    <div class="card">
+
+                        <div class="card-header">
+
+                            <h3>
+                                ${event.name}
+                            </h3>
+
+                            <span class="date">
+                                ${event.date}
+                            </span>
+
+                        </div>
+
+                        <span class="tag">
+                            ${event.category}
+                        </span>
+
+                        ${
+                            cached
+
+                            ?
+
+                            "<p>📦 Cached information</p>"
+
+                            :
+
+                            "<p>● Live information from Campus API</p>"
+                        }
+
+                    </div>
+
+                `;
+
+            }
+        );
+
+    }
+
+
+    /* =========================
+       API REQUEST
+    ========================= */
+
+    async function requestAPI(
+        url,
+        name
+    ) {
+
+        for (
+            let attempt = 1;
+            attempt <= MAX_RETRIES;
+            attempt++
+        ) {
+
+            document.getElementById(
+                "retryCount"
+            ).innerText =
+                attempt;
+
+
+            log(
+                `📡 Requesting ${name} API — Attempt ${attempt}/${MAX_RETRIES}`,
+                "info"
+            );
+
+
+            try {
+
+                const response =
+                    await fetch(url);
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "HTTP " +
+                        response.status
+                    );
+
+                }
+
+
+                const result =
+                    await response.json();
+
+
+                log(
+                    `✓ ${name} API responded successfully`,
+                    "success"
+                );
+
+
+                return result;
+
+            }
+
+
+            catch (error) {
+
+                log(
+                    `✕ ${name} API request failed`,
+                    "error"
+                );
+
+
+                if (
+                    attempt <
+                    MAX_RETRIES
+                ) {
+
+                    log(
+                        "↻ Retrying after 2 seconds...",
+                        "warning"
+                    );
+
+                    await sleep(2000);
+
+                }
+
+            }
+
+        }
+
+
+        log(
+            `⚠ ${name} API unavailable after ${MAX_RETRIES} attempts`,
+            "error"
+        );
+
+
+        return null;
+
+    }
+
+
+    /* =========================
+       CIRCUIT BREAKER
+    ========================= */
+
+    async function circuitBreaker() {
+
+        log(
+            "🔴 CIRCUIT BREAKER OPEN",
+            "error"
+        );
+
+
+        setStatus(
+            "🔴 API DOWN",
+            "down",
+            "Using cached campus information"
+        );
+
+
+        document.getElementById(
+            "systemMode"
+        ).innerText =
+            "CACHE";
+
+
+        showNotices(
+            cachedNotices,
+            true
+        );
+
+
+        showEvents(
+            cachedEvents,
+            true
+        );
+
+
+        while (true) {
+
+
+            for (
+                let seconds =
+                    RECOVERY_INTERVAL;
+                seconds > 0;
+                seconds--
+            ) {
+
+                document.getElementById(
+                    "timer"
+                ).innerText =
+                    `⏳ Next recovery check in ${seconds}s`;
+
+                await sleep(1000);
+
+            }
+
+
+            log(
+                "🟡 CIRCUIT BREAKER → HALF-OPEN",
+                "warning"
+            );
+
+
+            setStatus(
+                "🟡 TESTING API",
+                "recovery",
+                "Checking whether Campus API has recovered..."
+            );
+
+
+            document.getElementById(
+                "systemMode"
+            ).innerText =
+                "TEST";
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/notices"
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "API still unavailable"
+                    );
+
+                }
+
+
+                const result =
+                    await response.json();
+
+
+                log(
+                    "🟢 API RECOVERED",
+                    "success"
+                );
+
+
+                log(
+                    "🟢 CIRCUIT BREAKER CLOSED",
+                    "success"
+                );
+
+
+                setStatus(
+                    "🟢 API ONLINE",
+                    "live",
+                    "Live campus information restored"
+                );
+
+
+                document.getElementById(
+                    "systemMode"
+                ).innerText =
+                    "LIVE";
+
+
+                document.getElementById(
+                    "timer"
+                ).innerText =
+                    "✓ Live data restored";
+
+
+                showNotices(
+                    result.data,
+                    false
+                );
+
+
+                const eventsResponse =
+                    await fetch(
+                        "/api/events"
+                    );
+
+
+                if (
+                    eventsResponse.ok
+                ) {
+
+                    const eventsResult =
+                        await eventsResponse.json();
+
+
+                    showEvents(
+                        eventsResult.data,
+                        false
+                    );
+
+                }
+
+
+                setProgress(100);
+
+
+                break;
+
+            }
+
+
+            catch (error) {
+
+                log(
+                    "✕ Recovery test failed — API still DOWN",
+                    "error"
+                );
+
+
+                log(
+                    "🔴 Circuit remains OPEN",
+                    "error"
+                );
+
+
+                setStatus(
+                    "🔴 API DOWN",
+                    "down",
+                    "Waiting for next recovery check..."
+                );
+
+
+                document.getElementById(
+                    "systemMode"
+                ).innerText =
+                    "CACHE";
+
+            }
+
+        }
+
+    }
+
+
+    /* =========================
+       START SYSTEM
+    ========================= */
+
+    async function startSystem() {
+
+        log(
+            "✦ CampusSync monitoring started",
+            "info"
+        );
+
+
+        setStatus(
+            "🔵 CONNECTING",
+            "recovery",
+            "Connecting to Campus API..."
+        );
+
+
+        document.getElementById(
+            "systemMode"
+        ).innerText =
+            "CONNECT";
+
+
+        setProgress(10);
+
+
+        const notices =
+            await requestAPI(
+                "/api/notices",
+                "Notices"
+            );
+
+
+        if (notices) {
+
+            showNotices(
+                notices.data,
+                false
+            );
+
+            setProgress(50);
+
+        }
+
+
+        else {
+
+            await circuitBreaker();
+
+            return;
+
+        }
+
+
+        const events =
+            await requestAPI(
+                "/api/events",
+                "Events"
+            );
+
+
+        if (events) {
+
+            showEvents(
+                events.data,
+                false
+            );
+
+
+            setProgress(100);
+
+
+            setStatus(
+                "🟢 API ONLINE",
+                "live",
+                "All campus information is live"
+            );
+
+
+            document.getElementById(
+                "systemMode"
+            ).innerText =
+                "LIVE";
+
+
+            log(
+                "✓ All campus services operational",
+                "success"
+            );
+
+        }
+
+
+        else {
+
+            log(
+                "📦 Events API unavailable — using cached events",
+                "warning"
+            );
+
+
+            showEvents(
+                cachedEvents,
+                true
+            );
+
+        }
+
+    }
+
+
+    /* =========================
+       SLEEP
+    ========================= */
+
+    function sleep(ms) {
+
+        return new Promise(
+            resolve =>
+                setTimeout(
+                    resolve,
+                    ms
+                )
+        );
+
+    }
+
+
+    /* =========================
+       START
+    ========================= */
+
+    startSystem();
+
+</script>
+
+</body>
+</html>
